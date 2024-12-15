@@ -22,7 +22,7 @@ pip install -r requirements.txt
 To run the main application, execute:
 
 ```bash
-streamlit run app.py
+python app.py
 ```
 
 ## Additional Information
