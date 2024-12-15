@@ -54,12 +54,24 @@ class AnswerGenerator:
     def _handle_definition_question(self, concept, text):
         """Handle definition questions"""
         definitions = self.parser.get_concept_definition(concept)
-        if not definitions:
+        comments = self.parser.get_comments(concept)  # Get comments using rdfs:comment
+        
+        if not definitions and not comments:
             return None
             
-        answer = [f"📚 Definition:"]
-        for definition in definitions:
-            answer.append(f"{definition}")
+        answer = []
+        if definitions:
+            answer.append(f"📚 Definition:")
+            for definition in definitions:
+                answer.append(f"{definition}")
+                
+        if comments:
+            if answer:  # If we had definitions, add a line break
+                answer.append("")
+            answer.append(f"💭 Additional Information:")
+            for comment in comments:
+                answer.append(f"• {comment}")
+                
         return "\n".join(answer)
         
     def _handle_category_question(self, concept, text):
