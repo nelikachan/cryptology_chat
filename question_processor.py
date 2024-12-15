@@ -15,15 +15,15 @@ class QuestionProcessor:
         
         # Define question patterns
         self.question_patterns = {
-            'definition': r'what is|define|meaning of|definition of',
-            'category': r'which category|what type|what category|what class',
-            'references': r'where can i find|references|links|resources|more information',
-            'acronym': r'what is the acronym|abbreviation|short form',
-            'alternative_names': r'other names|alternative names|also known as|also called',
-            'subclass': r'what are the types of|what are the kinds of|what subclasses|subcategories',
-            'superclass': r'what is the parent|superclass|category of|type of',
-            'related': r'what is related to|connection between|relationship|how is it related',
-            'comments': r'what additional information|tell me more|additional details|more about'
+            'definition': r'what is|what are|define|meaning of|definition of|explain|tell me about|describe|what does .* mean|could you explain|help me understand|i want to know about|what\'s|whats|can you tell me about|give me information about',
+            'category': r'which category|what type|what category|what class|which class|which type|what kind|which kind',
+            'references': r'where can i find|references|links|resources|more information|where to read|additional resources|documentation|further reading|source|sources|learn more about|materials|bibliography',
+            'acronym': r'what is the acronym|abbreviation|short form|initialism|stands for|abbreviated as|shortened form',
+            'alternative_names': r'other names|alternative names|also known as|also called|synonyms|other terms for|different names|called otherwise',
+            'subclass': r'what are the types of|what are the kinds of|what subclasses|subcategories|what variants|what forms|examples of|instances of|specific types',
+            'superclass': r'what is the parent|superclass|category of|type of|belongs to which|part of which|classified as|grouped under',
+            'related': r'what is related to|connection between|relationship|how is it related|associated with|linked to|connected to|similar to',
+            'comments': r'what additional information|tell me more|additional details|more about|elaborate on|expand on|give details|in detail'
         }
         
     def process_question(self, question):
@@ -37,7 +37,12 @@ class QuestionProcessor:
         ref_type = None
         
         # Check for definition requests
-        if any(word in question_lower for word in ['what is', 'define', 'definition', 'meaning']):
+        if any(pattern in question_lower for pattern in [
+            'what is', 'what are', 'define', 'definition', 'meaning', 'explain', 
+            'tell me about', 'describe', 'mean', 'could you explain', 
+            'help me understand', 'want to know about', "what's", 'whats',
+            'can you tell me about', 'give me information about'
+        ]):
             question_types.add('definition')
             
         # Check for acronym requests
@@ -153,7 +158,7 @@ class QuestionProcessor:
             if token.text in ['what', 'who', 'where', 'when', 'how', 'why', 'which']:
                 found_question_word = True
                 continue
-                
+            
             if found_question_word and token.pos_ in ['NOUN', 'PROPN']:
                 focus_words.append(token.text)
                 
